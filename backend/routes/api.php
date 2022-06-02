@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\ImageService;
+use App\Http\Controllers\GeneralController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/** routes para Vehicle **/
+
+Route::apiResource('vehicles', \App\Http\Controllers\Vehicle\VehicleController::class)
+        ->only(['index','show']);
+
 /** routes para Person **/
 
 Route::apiResource('people', \App\Http\Controllers\Person\PersonController::class);
@@ -26,3 +32,5 @@ Route::apiResource('people', \App\Http\Controllers\Person\PersonController::clas
 /** routes para Supervision **/
 
 Route::apiResource('supervisions', \App\Http\Controllers\Supervision\SupervisionController::class);
+
+Route::get('municipalities',[GeneralController::class,'getMunicipalities']);

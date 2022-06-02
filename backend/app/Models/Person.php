@@ -28,4 +28,14 @@ class Person extends CrudModel
     {
         return $this->hasOne(Vehicle::class);
     }
+
+    /**
+     * Get the municipality that owns the Person
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function municipality()
+    {
+        return $this->belongsTo(Municipality::class);
+    }
 }

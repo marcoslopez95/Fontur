@@ -31,7 +31,7 @@ class CrudRepository implements CrudInterfaz
 
     public function update($id, Request $request){
         self::show($id);
-        $this->model->update($request->all());
+        $this->object->update($request->all());
 
         return self::show($id);
     }

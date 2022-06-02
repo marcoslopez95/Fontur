@@ -13,7 +13,7 @@ class SupervisionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +23,31 @@ class SupervisionRequest extends FormRequest
      */
     public function rules()
     {
+        if ($this->isMethod('post'))
+            return [
+                'vehicles' => 'required|array',
+                'vehicles.*.id' => 'required|integer|exists:vehicles,id|distinct',
+                'vehicles.*.active' => 'required|boolean',
+                'date' => 'required|date'
+            ];
+        if ($this->isMethod('put'))
+            return [
+                'vehicle_id' => 'required|integer|exists:vehicles,id',
+                'activo' => 'required|boolean',
+                'fecha' => 'required|date'
+            ];
+    }
+
+    public function messages()
+    {
         return [
-            //
+            'required' => 'El campo :attribute es requerido',
+            'array' => 'El campo :attribute debe ser un arreglo',
+            'integer' => 'El campo :attribute debe ser un número',
+            'exists' => 'El vehiculo no existe en la base de datos',
+            'date' => 'La fecha es inválida',
+            'distinct' => 'El id ya está añadido',
+            'boolean' => 'El campo debe ser un booleano'
         ];
     }
 }

@@ -13,4 +13,15 @@ class Supervision extends CrudModel
         'fecha',
         'activo'
     ];
+
+    protected $with = 'vehicle.person.municipality';
+    /**
+     * Get the vehicle that owns the Supervision
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
 }

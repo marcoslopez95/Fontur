@@ -23,4 +23,14 @@ class Vehicle extends CrudModel
     {
         return $this->belongsTo(Person::class);
     }
+
+    /**
+     * Get all of the supervisions for the Vehicle
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function supervisions()
+    {
+        return $this->hasMany(Supervision::class);
+    }
 }
