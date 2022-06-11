@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Core\CrudModel;
+use Carbon\Carbon;
 
 class Supervision extends CrudModel
 {
@@ -14,7 +15,16 @@ class Supervision extends CrudModel
         'activo'
     ];
 
-    protected $with = 'vehicle.person.municipality';
+    public function getFechaAttribute($value){
+        return  Carbon::parse($value)->format('Y-m-d');
+    }
+
+    public function getActivoAttribute($value){
+        return
+            $value == true ?
+            'Sí':
+            'No';
+    }
     /**
      * Get the vehicle that owns the Supervision
      *

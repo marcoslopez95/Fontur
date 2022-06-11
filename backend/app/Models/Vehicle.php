@@ -10,8 +10,10 @@ class Vehicle extends CrudModel
     protected $guarded = ['id'];
 
     protected $fillable = [
+        'person_id',
         'placa',
-        'person_id'
+        'type_fuel',
+        'num_controller',
     ];
 
     /**
@@ -33,4 +35,5 @@ class Vehicle extends CrudModel
     {
         return $this->hasMany(Supervision::class);
     }
+
 }

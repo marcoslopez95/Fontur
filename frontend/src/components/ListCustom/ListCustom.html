@@ -1,0 +1,15 @@
+<div class="justify-end flex">
+    <div>
+    <ButtomCustom width="w-[200px] h-[40px] mb-[25px] ml-[25px] bg-blue-800 hover:bg-blue-400" @click="$emit('click-create')">
+         Crear {{nombreBoton}}
+    </ButtomCustom>
+</div>
+</div>
+<TableCustom 
+    :headers="headers"
+    :items="items"
+    :widthTable="widthTable"
+    :urlDelete="urlDelete"
+    :routeEdit="routeEdit"
+    :widthColumn="widthColumn"
+/>

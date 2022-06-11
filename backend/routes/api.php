@@ -22,8 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /** routes para Vehicle **/
 
-Route::apiResource('vehicles', \App\Http\Controllers\Vehicle\VehicleController::class)
-        ->only(['index','show']);
+Route::apiResource('vehicles', \App\Http\Controllers\Vehicle\VehicleController::class);
 
 /** routes para Person **/
 
