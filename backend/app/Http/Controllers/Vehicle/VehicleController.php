@@ -15,6 +15,11 @@ class VehicleController extends CrudController
     }
 
     public function store(VehicleRequest $request){
-        return $this->service->store($request);
+        return parent::_store($request);
+    }
+
+    public function update($id, VehicleRequest $request)
+    {
+        return parent::_update($id,$request);
     }
 }

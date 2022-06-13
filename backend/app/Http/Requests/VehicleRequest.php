@@ -24,12 +24,24 @@ class VehicleRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-            'person_id' => 'nullable',
-            'placa' => 'string|unique:vehicles',
-            'type_fuel' => ['string', Rule::in(['Gasolina','Diesel'])],
-            'num_controller'    => 'string',
-        ];
+        if($this->isMethod('post')){
+            return [
+                //
+                'person_id' => 'nullable',
+                'placa' => 'string|unique:vehicles',
+                'type_fuel' => ['string', Rule::in(['Gasolina','Diesel','Eléctrico'])],
+                'num_controller'    => 'string',
+            ];
+        }
+        if($this->isMethod('put')){
+            return [
+                //
+                'person_id' => 'nullable',
+                'placa' => ['string',Rule::unique('vehicles')->ignore($this->vehicle)],
+                'type_fuel' => ['string', Rule::in(['Gasolina','Diesel','Eléctrico'])],
+                'num_controller'    => 'string',
+            ];
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Core\ImageService;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\Vehicle\VehicleReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 /** routes para Vehicle **/
 
 Route::apiResource('vehicles', \App\Http\Controllers\Vehicle\VehicleController::class);
+
+//Reportes
+Route::prefix('report')->group(function () {
+    Route::get('vehicles', [VehicleReportController::class,'report']);
+});
 
 /** routes para Person **/
 

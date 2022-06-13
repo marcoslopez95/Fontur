@@ -20,7 +20,7 @@ class CrudRepository implements CrudInterfaz
     }
 
     public function show($id){
-        $this->object = $this->model::find($id);
+        $this->object = $this->model::findOrFail($id);
         return $this->object;
     }
 
@@ -38,6 +38,7 @@ class CrudRepository implements CrudInterfaz
 
     public function destroy($id, Request $request){
         self::show($id);
+       // dd($this->object);
         return $this->object->delete();
     }
 

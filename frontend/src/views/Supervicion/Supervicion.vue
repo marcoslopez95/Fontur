@@ -1,54 +1,78 @@
 <template >
-<div>
-    <h1 class="text-4xl text-center">Supervisiones</h1>
+    <div>
+        <h1 class="text-4xl text-center">Supervisiones</h1>
 
-    <ListCustom
-        :headers="headers"
-        :items="items"
-        nombreBoton="Supervision"
-        widthTable="w-[90%]"
-
-        urlDelete="supervisions"
-        @click-create="CreateSupervision()"
-    />
+        <Loading :show="!loading" />
+        <ListCustom
+            v-if="loading"
+            :headers="headers"
+            :items="items"
+            nombreBoton="Supervision"
+            widthTable="w-[90%]"
+            urlDelete="supervisions"
+            @click-create="CreateSupervision()"
+        >
+            <template #filtro>
+                <div>
+                    <a target="_blank">
+                        <ButtonCustom title="Descargar" 
+                        class="
+                            ml-[80px]
+                            h-[40px]
+                            bg-green-700
+                            hover:bg-green-400
+                        "
+                        @click="descargar"
+                        >
+                            <DownloadIcon />
+                        </ButtonCustom>
+                    </a>
+                </div>
+            </template>
+        </ListCustom>
     </div>
 </template>
 
 <script setup lang="ts">
 import ListCustom from "../../components/ListCustom/ListCustom.vue";
 import { headers } from "./Supervicion";
-import {useRouter} from 'vue-router'
-import {inject,watch, ref, onMounted} from 'vue'
+import { useRouter } from "vue-router";
+import { inject, watch, ref, onMounted } from "vue";
 import axios from "axios";
+import Loading from "../../components/Loading.vue";
+import ButtonCustom from "../../components/ButtonCustom.vue";
+import DownloadIcon from "../../components/Icons/DownloadIcon.vue";
 
 //const eventStore = inject<boolean>(StoreSupervision,false)
-const router = useRouter()
-let items = ref([])
+const router = useRouter();
+let items = ref([]);
+let loading = ref(false);
 
-function CreateSupervision(){
-    router.push({name: 'supervision-create'})
+function CreateSupervision() {
+    router.push({ name: "supervision-create" });
 }
 
-function getIndex(){
+function descargar(){
+    
+}
+
+function getIndex() {
     axios
-        .get('supervisions')
-        .then(res => {
-            let data = res.data.data
-            items.value = data
+        .get("supervisions")
+        .then((res) => {
+            let data = res.data.data;
+            items.value = data;
+            loading.value = true;
         })
-        .catch(err=>{
-            let e = err.response.data
-            console.log('error',e);
-            
-        })
+        .catch((err) => {
+            let e = err.response.data;
+            console.log("error", e);
+        });
 }
 
-onMounted(
-    ()=> {
-        getIndex()
-    }
-)
-
+onMounted(() => {
+    getIndex();
+});
 </script>
 
 <style src="./Supervicion.css">

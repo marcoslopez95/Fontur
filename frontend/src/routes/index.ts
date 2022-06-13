@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import IndexVue from '../views/Index/Index.vue';
 import SupervicionCreate from '../views/Supervicion/Create/SupervisionCreate.vue';
 import SupervicionVue from '../views/Supervicion/Supervicion.vue';
+import CreateVehiculo from '../views/Vehiculo/Create/CreateVehiculo.vue';
 import VehiculoVue from '../views/Vehiculo/Vehiculo.vue';
 
 const Router = createRouter({
@@ -25,9 +26,16 @@ const Router = createRouter({
       path: '/supervision/create',
       name: 'supervision-create',
       component: SupervicionCreate,
-      props:{
-        menuActive: 1
-      }
+    },
+    {
+      path: '/vehiculo/create',
+      name: 'vehiculo-create',
+      component: CreateVehiculo,
+    },
+    {
+      path: '/vehiculo/edit/:id',
+      name: 'vehiculo-edit',
+      component: CreateVehiculo,
     },
   ],
 });

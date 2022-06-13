@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Core\CrudModel;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supervision extends CrudModel
 {
+
+    use SoftDeletes;
+
     protected $guarded = ['id'];
     protected $fillable = [
         'vehicle_id',
