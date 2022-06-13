@@ -14,19 +14,34 @@
         >
             <template #filtro>
                 <div>
-                    <a target="_blank">
-                        <ButtonCustom title="Descargar" 
-                        class="
-                            ml-[80px]
-                            h-[40px]
-                            bg-green-700
-                            hover:bg-green-400
-                        "
-                        @click="descargar"
+                    <a target="_blank" :href="dowload">
+                        <ButtonCustom
+                            title="Descargar"
+                            class="
+                                ml-[80px]
+                                h-[40px]
+                                bg-green-700
+                                hover:bg-green-400
+                            "
+                            
                         >
                             <DownloadIcon />
                         </ButtonCustom>
                     </a>
+                    <!-- <a target="_blank">
+                        <ButtonCustom
+                            title="Descargar"
+                            class="
+                                ml-[80px]
+                                h-[40px]
+                                bg-green-700
+                                hover:bg-green-400
+                            "
+                            @click="descargar"
+                        >
+                            <filter-icon />
+                        </ButtonCustom>
+                    </a> -->
                 </div>
             </template>
         </ListCustom>
@@ -42,18 +57,19 @@ import axios from "axios";
 import Loading from "../../components/Loading.vue";
 import ButtonCustom from "../../components/ButtonCustom.vue";
 import DownloadIcon from "../../components/Icons/DownloadIcon.vue";
+import FilterIcon from "../../components/Icons/FilterIcon.vue";
 
 //const eventStore = inject<boolean>(StoreSupervision,false)
 const router = useRouter();
 let items = ref([]);
 let loading = ref(false);
-
+let dowload = import.meta.env.VITE_API+'/report/vehicles'
 function CreateSupervision() {
     router.push({ name: "supervision-create" });
 }
 
-function descargar(){
-    
+function descargar() {
+    axios.get('report/vehicles')
 }
 
 function getIndex() {

@@ -31,10 +31,12 @@ class VehicleReportController extends Controller
     protected $fech_ini;
     protected $html;
     protected $vehicles;
+    protected $supervisions;
 
-    public function __construct(Vehicle $model)
+    public function __construct(Vehicle $model, Supervision $supervision)
     {
         $this->model = $model;
+        $this->supervisions = $supervision;
     }
 
     public function report(Request $request)
@@ -55,14 +57,15 @@ class VehicleReportController extends Controller
         if ($request->has('fecha_ini')) {
             $this->fecha_ini = Carbon::parse($request->fecha_ini);
         } else {
-            $min = $this->model::all()->min('fecha');
+            $min = $this->supervisions::all()->min('fecha');
+
             $this->fecha_ini = Carbon::parse($min);
         }
 
         if ($request->has('fecha_fin')) {
             $this->fecha_fin = Carbon::parse($request->fecha_fin);
         } else {
-            $max = $this->model::all()->max('fecha');
+            $max = $this->supervisions::all()->max('fecha');;
             $this->fecha_fin = Carbon::parse($max);
         }
         $dif_days = $this->fecha_fin->diffInDays($this->fecha_ini);
@@ -83,11 +86,6 @@ class VehicleReportController extends Controller
             "percent_no_worked" => DB::table('supervisions')->select(DB::raw("round(($dif_days-count(*))*100/$dif_days::numeric,2)"))->whereColumn('vehicle_id', 'vehicles.id'),
         ])
             ->Filtro($request)
-            ->whereHas('supervisions', function (Builder $query) {
-                $rango = [$this->fecha_ini->format('Y-m-d'), $this->fecha_fin->format('Y-m-d')];
-                //dd($rango);
-                $query->whereBetween('fecha', $rango);
-            })
             ->get();
     }
 
