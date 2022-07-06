@@ -32,6 +32,8 @@ class VehicleReportController extends Controller
     protected $html;
     protected $vehicles;
     protected $supervisions;
+    protected $type_report;
+    protected $dif_days;
 
     public function __construct(Vehicle $model, Supervision $supervision)
     {
@@ -41,15 +43,37 @@ class VehicleReportController extends Controller
 
     public function report(Request $request)
     {
-        $dif_days = self::totalDays($request);
-        self::getVehicles($request, $dif_days);
-
-        if ($dif_days == 0) {
-            return custom_response(false, 'error de datos', '', 424);
+        $this->dif_days = self::totalDays($request);
+        self::getVehicles($request);
+        $option = $request['type_report'] ?? 'General';
+        switch($option){
+            case 'General':
+                self::reportGeneral($request);
+                break;
+            case 'Municipio':
+                self::reportByMunicipality();
+                breal;
         }
 
-        self::html($dif_days);
         return self::generarPdf();
+    }
+
+    private function reportByMunicipality(){
+
+    }
+
+    private function reportGeneral(){
+        $this->type_report = 'General';
+
+        $this->html = view('Reports.VehicleReport', [
+            'headers' => $this->headers,
+            'fecha_ini' => $this->fecha_ini->format('Y-m-d'),
+            'fecha_fin' => $this->fecha_fin->format('Y-m-d'),
+            'vehicles' => $this->vehicles,
+            'type_report' => $this->type_report,
+            'dif_days' => $this->dif_days
+        ]);
+
     }
 
     private function totalDays(Request $request)
@@ -75,15 +99,14 @@ class VehicleReportController extends Controller
         return $dif_days - $dif_weekend_days;
     }
 
-
-
-    private function getVehicles(Request $request, $dif_days)
+    private function getVehicles(Request $request)
     {
         $this->vehicles = $this->model::addSelect([
+            'line_name' => DB::table('lines')->select('name')->whereColumn('line_id','lines.id')->limit(1),
             'days_worked' => DB::table('supervisions')->select(DB::raw('count(*)'))->whereColumn('vehicle_id', 'vehicles.id'),
-            'days_no_worked' => DB::table('supervisions')->select(DB::raw("$dif_days-count(*)"))->whereColumn('vehicle_id', 'vehicles.id'),
-            "percent_worked" => DB::table('supervisions')->select(DB::raw("round(count(*)*100/$dif_days::numeric,2)"))->whereColumn('vehicle_id', 'vehicles.id'),
-            "percent_no_worked" => DB::table('supervisions')->select(DB::raw("round(($dif_days-count(*))*100/$dif_days::numeric,2)"))->whereColumn('vehicle_id', 'vehicles.id'),
+            'days_no_worked' => DB::table('supervisions')->select(DB::raw($this->dif_days."-count(*)"))->whereColumn('vehicle_id', 'vehicles.id'),
+            "percent_worked" => DB::table('supervisions')->select(DB::raw("round(count(*)*100/".$this->dif_days."::numeric,2)"))->whereColumn('vehicle_id', 'vehicles.id'),
+            "percent_no_worked" => DB::table('supervisions')->select(DB::raw("round((".$this->dif_days."-count(*))*100/".$this->dif_days."::numeric,2)"))->whereColumn('vehicle_id', 'vehicles.id'),
         ])
             ->Filtro($request)
             ->get();
@@ -97,16 +120,5 @@ class VehicleReportController extends Controller
         header('Content-Type: application/pdf');
         header("Content-Disposition: inline; filename='$nombre_archivo.pdf'");
         return $pdf->Output("$nombre_archivo.pdf", 'I');
-    }
-
-    private function html()
-    {
-
-        $this->html = view('Reports.VehicleReport', [
-            'headers' => $this->headers,
-            'fecha_ini' => $this->fecha_ini->format('Y-m-d'),
-            'fecha_fin' => $this->fecha_fin->format('Y-m-d'),
-            'vehicles' => $this->vehicles
-        ]);
     }
 }

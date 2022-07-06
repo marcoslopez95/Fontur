@@ -1,11 +1,6 @@
 <?php
 
-
 use Illuminate\Support\Facades\Log;
-
-
-
-
 
 if (! function_exists('custom_response')){
     function custom_response(bool $success = true, string $message = '',$data = [],int $code = 200)
@@ -31,7 +26,7 @@ if (! function_exists('custom_response')){
             $response['total'] = count($data);
         }
 
-        return response()->json($response, $code);
+        return new Illuminate\Http\Response($response,$code);
     }
 }
 
@@ -46,5 +41,14 @@ if (! function_exists('custom_error')){
 
         Log::alert($error);
         return custom_response(false);
+    }
+}
+
+if(! function_exists('custom_failed_validation')){
+    function custom_failed_validation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = custom_response(false,$validator->errors()->first(),[],422);
+
+        throw new Illuminate\Validation\ValidationException($validator, $response);
     }
 }

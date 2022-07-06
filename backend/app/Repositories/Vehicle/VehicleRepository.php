@@ -7,6 +7,7 @@
 namespace App\Repositories\Vehicle;
 
 use App\Core\CrudRepository;
+use App\Models\Line;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,11 @@ class VehicleRepository extends CrudRepository
 
     public function index(Request $request)
     {
-        $vehicles = $this->model::Filtro($request)->get();
+        $vehicles = $this->model::Filtro($request)
+                ->addSelect([
+                    'line_name' => Line::select('name')->whereColumn('line_id','lines.id')->limit(1)
+                ])
+                ->get();
         return $vehicles;
     }
 }

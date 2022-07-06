@@ -14,6 +14,10 @@ let headers = [
     {
         value: 'type_fuel',
         text: "Tipo de Combustible"
+    },
+    {
+        value: 'line_name',
+        text: 'Línea'
     }
 ]
 

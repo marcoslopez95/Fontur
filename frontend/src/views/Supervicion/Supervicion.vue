@@ -28,7 +28,7 @@
                             <DownloadIcon />
                         </ButtonCustom>
                     </a>
-                    <!-- <a target="_blank">
+                    <a target="_blank">
                         <ButtonCustom
                             title="Descargar"
                             class="
@@ -41,7 +41,7 @@
                         >
                             <filter-icon />
                         </ButtonCustom>
-                    </a> -->
+                    </a>
                 </div>
             </template>
         </ListCustom>

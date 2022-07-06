@@ -25,22 +25,62 @@
                         "
                     />
                 </div>
-                <!-- <div class="flex" v-if="true == false">
-                    <div class="mx-[25px] my-auto">
-                        <label for="type_supervision">
-                            {{ type }}
-                        </label>
+                <div class="flex mx-[20px] my-auto">
+                    <div class="mr-[15px]">
+                        <label class="" for="control">Municipio</label>
                     </div>
-
-                    <ToggleCustom
-                        class="pt-0 pb-0"
-                        id="type_supervision"
-                        @change="cambio"
-                    />
-                </div> -->
+                    <div>
+                        <select
+                            v-model="municipality_id"
+                            class="
+                                w-[150px]
+                                text-left
+                                bg-slate-200
+                                rounded
+                                hover:ring-blue-300
+                            "
+                            @change="getSupervisors"
+                        >
+                            <option
+                                v-for="(municipality, j) in municipalities"
+                                :key="j"
+                                :value="municipality.id"
+                            >
+                                {{ municipality.nombre }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex mx-[20px] my-auto">
+                    <div class="mr-[15px]">
+                        <label class="" for="control">Supervisor</label>
+                    </div>
+                    <div>
+                        <select
+                            v-model="supervisor_id"
+                            class="
+                                w-[150px]
+                                text-left
+                                bg-slate-200
+                                rounded
+                                hover:ring-blue-300
+                            "
+                        >
+                            <option
+                                v-for="(supervisor, l) in supervisors"
+                                :key="l"
+                                :value="supervisor.id"
+                            >
+                                {{ supervisor.nombre }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
             </div>
             <SupervisionOne
                 class="mt-[20px]"
+                :municipality_id="municipality_id"
                 @loading="load"
                 @guardar="guardar"
             >
@@ -54,14 +94,76 @@ import Loading from "../../../components/Loading.vue";
 import ToggleCustom from "../../../components/ToggleCustom.vue";
 import SupervisionOne from "./SupervisionOne.vue";
 import SupervisionMany from "./SupervisionMany.vue";
-import { ref, provide } from "vue";
+import { ref, provide, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import type { InjectionKey } from "vue";
 
 const StoreSupervision = Symbol() as InjectionKey<boolean>;
-
 provide(StoreSupervision, true);
+
+let municipality_id = ref("");
+let supervisor_id = ref("");
+let supervisors = ref([
+    {
+        id: "",
+        nombre: "Seleccione...",
+    },
+]);
+let municipalities = ref([
+    {
+        id: "",
+        nombre: "Seleccione...",
+    },
+]);
+
+function getMunicipalities() {
+    let params = {
+        state: "táchira",
+    };
+    axios
+        .get(`municipalities`, { params })
+        .then((res) => {
+            let data = res.data;
+            console.log("mun", data);
+
+            data.forEach((element) => {
+                municipalities.value.push({
+                    nombre: element.nombre,
+                    id: element.id,
+                });
+            });
+        })
+        .catch((err) => {});
+}
+
+function getSupervisors() {
+    supervisors.value = [
+        {
+            id: "",
+            nombre: "Seleccione...",
+        },
+    ];
+    let params = {
+        municipality_id: municipality_id.value,
+    };
+    axios
+        .get(`supervisors`, { params })
+        .then((res) => {
+            let data = res.data.data;
+            console.log("sup", data);
+
+            data.forEach((element) => {
+                console.log(element);
+
+                supervisors.value.push({
+                    nombre: element.first_name + " " + element.last_name,
+                    id: element.id,
+                });
+            });
+        })
+        .catch((err) => {});
+}
 
 let type = ref("Supervisión Individual");
 let enabled = ref(false);
@@ -94,5 +196,9 @@ function guardar(selecteds: array) {
             console.log("err", e);
         });
 }
+
+onBeforeMount(() => {
+    getMunicipalities();
+});
 </script>
 

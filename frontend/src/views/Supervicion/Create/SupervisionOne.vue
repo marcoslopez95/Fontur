@@ -26,6 +26,31 @@
                     @click="filtrar"
                 />
             </div>
+            <div class="flex mx-[50px] my-auto">
+                    <div class="mr-[15px]">
+                        <label class="" for="control">Línea</label>
+                    </div>
+                    <div>
+                        <select
+                            v-model="line_id"
+                            class="
+                                w-[150px]
+                                text-left
+                                bg-slate-200
+                                rounded
+                                hover:ring-blue-300
+                            "
+                        >
+                            <option
+                                v-for="(line, l) in lines"
+                                :key="l"
+                                :value="line.id"
+                            >
+                                {{ line.nombre }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
         </div>
 
         <div class="">
@@ -108,9 +133,15 @@
 
 <script lang="ts" setup>
 import SearchIcon from "../../../components/Icons/SearchIcon.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUpdated } from "vue";
 import axios from "axios";
 import ButtonCustom from "../../../components/ButtonCustom.vue";
+
+const props = defineProps<{
+    municipality_id: string | null
+}>()
+
+
 const headers_vehicle = ref([
     {
         text: "Placa",
@@ -132,6 +163,12 @@ const headers_vehicle = ref([
 
 let vehiculos = ref([]);
 let original = ref([]);
+let line_id = ref('')
+
+const lines = ref([{
+    id: '',
+    nombre: 'Todas'
+}])
 let form = ref({
     selecteds: [],
 });
@@ -157,6 +194,28 @@ onMounted(() => {
         vehiculos.value = original.value = data;
     });
 });
+
+
+function getLines(){
+   let params = {
+        line_id: line_id.value,
+    };
+
+    axios
+        .get(`line`, { params })
+        .then((res) => {
+            let data = res.data.data;
+            console.log("mun", data);
+
+            data.forEach((element) => {
+                lines.value.push({
+                    nombre: element.name,
+                    id: element.id,
+                });
+            });
+        })
+        .catch((err) => {});
+}
 
 function filtrar() {
      vehiculos.value = original.value 

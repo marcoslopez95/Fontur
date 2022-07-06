@@ -20,7 +20,18 @@ class Vehicle extends CrudModel
         'placa',
         'type_fuel',
         'num_controller',
+        'line_id'
     ];
+
+    /**
+     * Get the line that owns the Vehicle
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function line()
+    {
+        return $this->belongsTo(Line::class);
+    }
 
     /**
      * Get the person that owns the Vehicle

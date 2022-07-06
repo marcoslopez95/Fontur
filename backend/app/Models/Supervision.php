@@ -17,8 +17,18 @@ class Supervision extends CrudModel
     protected $fillable = [
         'vehicle_id',
         'fecha',
-        'activo'
+        'supervisor_id'
     ];
+
+    /**
+     * Get the supervisor that owns the Supervision
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function supervisor()
+    {
+        return $this->belongsTo(Supervisor::class);
+    }
 
     public function getFechaAttribute($value)
     {
@@ -64,6 +74,12 @@ class Supervision extends CrudModel
                 $query->where('placa','ilike',"%$num_controller%");
             });
         })
-        ;
+        ->when($request->municipality_id,function($q,$municipality_id){
+            $q->whereHas('vehicle', function (Builder $query) use ($municipality_id){
+                $query->whereHas('line', function (Builder $query) use ($municipality_id){
+                    $query->where('municipality_id',$municipality_id);
+                });
+            });
+        });
     }
 }

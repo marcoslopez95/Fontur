@@ -21,7 +21,7 @@
                     :key="j"
                     class="text-center hover:bg-gray-200 flex"
                 >
-                    <div v-for="(key, k) in headers" :key="k" class="w-[250px]">
+                    <div v-for="(key, k) in headers" :key="k" class="w-[250px] my-auto">
                         <span v-if="key.value == 'num'">{{ j + 1 }}</span>
                         <span v-if="key.value == 'act'">
                             <Actions

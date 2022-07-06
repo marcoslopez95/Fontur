@@ -8,7 +8,7 @@
             h-[25px]
             rounded-[25px]
             text-white
-            hover:bg-red-300
+            hover:bg-blue-300
         "
         :class="[width]"
     >

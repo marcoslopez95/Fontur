@@ -50,4 +50,9 @@ class SupervisionRequest extends FormRequest
             'boolean' => 'El campo debe ser un booleano'
         ];
     }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        custom_failed_validation($validator);
+    }
 }

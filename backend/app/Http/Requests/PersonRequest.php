@@ -67,4 +67,9 @@ class PersonRequest extends FormRequest
             'exists'    => 'El municipio no existe en la base de datos'
         ];
     }
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        custom_failed_validation($validator);
+    }
 }

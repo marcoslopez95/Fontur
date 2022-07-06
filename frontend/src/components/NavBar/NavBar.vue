@@ -20,14 +20,24 @@ const categories = ref([
         item: 'Supervisiones',
         to: 'Supervision',
         name: 'Supervision'
-    }
+    },
+    {
+        item: 'Supervisores',
+        to: 'Supervisor',
+        name: 'Supervisor'
+    },
+    {
+        item: 'Líneas',
+        to: 'linea',
+        name: 'linea'
+    },
 ])
  
 let hola = ()=>console.log('hola')
 
 let indexActive = () => {
     let path = useRoute().name
-    console.log('path',path);
+    console.log('path',path); 
     
     menuActive.value = categories.value.findIndex(item => item.name === path);
     console.log('menuActive',menuActive.value);
