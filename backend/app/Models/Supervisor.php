@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Core\CrudModel;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class Supervisor extends CrudModel
 {
@@ -36,7 +37,16 @@ class Supervisor extends CrudModel
                 })
                 ->when($request->municipality_id,function(Builder $query, $municipality_id){
                     return $query->where('municipality_id',$municipality_id);
-                });
+                })
+                ->when($request->supervision,function(Builder $q,$supervision){
+                    return $q->where(function(Builder $q2) use ($supervision){
+                        $q2->where('first_name','ilike',"%$supervision%")
+                            ->orWhere('last_name','ilike',"%$supervision%")
+                            ->orWhere('ci','ilike',"%$supervision%")
+                            ->orWhere(DB::raw("first_name||' '||last_name"),'ilike',"%$supervision%");
+                    });
+                })
+                ;
     }
 
     public function scopeRegional(Builder $query){

@@ -1,13 +1,14 @@
 <template>
     <div class="px-[24px]">
-        <div class="mx-auto overflow-y-auto h-[350px]" :class="widthTable">
-            <div class="border-b-2 border-b-black">
+        <div class="mx-auto " :class="widthTable">
+            <div class="border-b-2 border-b-black fixed-top">
                 <div class="flex">
                     <div
                         v-for="(header, i) in headers"
                         class="text-center font-bold w-[250px]"
                         :class="[
                             header.value != 'act' ? widthColumn : 'w-[250px]',
+                            header.value == 'num' ?  'w-[10px]' :'w-[250px]',
                         ]"
                         :key="i"
                     >
@@ -15,13 +16,18 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div class="overflow-y-auto h-[320px]">
                 <div
                     v-for="(item, j) in items"
                     :key="j"
                     class="text-center hover:bg-gray-200 flex"
                 >
-                    <div v-for="(key, k) in headers" :key="k" class="w-[250px] my-auto">
+                    <div 
+                        v-for="(key, k) in headers"
+                        :key="k" 
+                        class="w-[250px] my-auto"
+                        :class="key.value == 'num' ? 'w-[10px]' :'w-[250px]'"
+                        >
                         <span v-if="key.value == 'num'">{{ j + 1 }}</span>
                         <span v-if="key.value == 'act'">
                             <Actions

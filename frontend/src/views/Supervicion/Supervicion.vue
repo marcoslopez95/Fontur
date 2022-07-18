@@ -23,7 +23,6 @@
                                 bg-green-700
                                 hover:bg-green-400
                             "
-                            
                         >
                             <DownloadIcon />
                         </ButtonCustom>
@@ -37,11 +36,14 @@
                                 bg-green-700
                                 hover:bg-green-400
                             "
-                            @click="descargar"
+                            @click="showModal = true"
                         >
                             <filter-icon />
                         </ButtonCustom>
                     </a>
+                    <CardModal :showing="showModal" @close="showModal = false">
+                       <filtro-supervicion @close="showModal = false" @filtrar="filtrar" />
+                    </CardModal>
                 </div>
             </template>
         </ListCustom>
@@ -58,23 +60,29 @@ import Loading from "../../components/Loading.vue";
 import ButtonCustom from "../../components/ButtonCustom.vue";
 import DownloadIcon from "../../components/Icons/DownloadIcon.vue";
 import FilterIcon from "../../components/Icons/FilterIcon.vue";
+import CardModal from "../../components/CardModal.vue";
+import FiltroSupervicion from "./FiltroSupervicion.vue";
 
 //const eventStore = inject<boolean>(StoreSupervision,false)
 const router = useRouter();
 let items = ref([]);
+const showModal = ref(false);
 let loading = ref(false);
-let dowload = import.meta.env.VITE_API+'/report/vehicles'
+let dowload = ref(import.meta.env.VITE_API + "/report/vehicles");
+const filtro = ref({})
+
 function CreateSupervision() {
     router.push({ name: "supervision-create" });
 }
 
-function descargar() {
-    axios.get('report/vehicles')
+function descargar(): void {
+    axios.get("report/vehicles");
 }
 
-function getIndex() {
+function getIndex(params = null): void {
+    items.value = []
     axios
-        .get("supervisions")
+        .get("supervisions",{params})
         .then((res) => {
             let data = res.data.data;
             items.value = data;
@@ -86,6 +94,19 @@ function getIndex() {
         });
 }
 
+let filtrar = (value) => {
+    loading.value = false
+    showModal.value = false
+    filtro.value = value
+    getIndex(value)
+    crearRuta()
+}
+let crearRuta = () => {
+    dowload.value = import.meta.env.VITE_API + "/report/vehicles?";
+    for(let item in filtro.value){
+        dowload.value += `${item}=${filtro.value[item]}&`
+    }
+}
 onMounted(() => {
     getIndex();
 });

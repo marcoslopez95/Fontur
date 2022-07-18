@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vehicle;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Vehicle\VehicleController;
 use App\Models\Supervision;
+use App\Models\Supervisor;
 use App\Models\Vehicle;
 use App\Repositories\Vehicle\VehicleRepository;
 use Carbon\Carbon;
@@ -37,7 +38,7 @@ class VehicleReportController extends Controller
 
     public function __construct(Vehicle $model, Supervision $supervision)
     {
-        $this->model = $model;
+        $this->model = $supervision;
         $this->supervisions = $supervision;
     }
 
@@ -52,7 +53,7 @@ class VehicleReportController extends Controller
                 break;
             case 'Municipio':
                 self::reportByMunicipality();
-                breal;
+                break;
         }
 
         return self::generarPdf();
@@ -71,7 +72,8 @@ class VehicleReportController extends Controller
             'fecha_fin' => $this->fecha_fin->format('Y-m-d'),
             'vehicles' => $this->vehicles,
             'type_report' => $this->type_report,
-            'dif_days' => $this->dif_days
+            'dif_days' => $this->dif_days,
+            'name_report' => 'Vehiculos'
         ]);
 
     }
@@ -101,15 +103,15 @@ class VehicleReportController extends Controller
 
     private function getVehicles(Request $request)
     {
-        $this->vehicles = $this->model::addSelect([
+        $this->vehicles = $this->model::Filtro($request)
+        ->addSelect([
             'line_name' => DB::table('lines')->select('name')->whereColumn('line_id','lines.id')->limit(1),
             'days_worked' => DB::table('supervisions')->select(DB::raw('count(*)'))->whereColumn('vehicle_id', 'vehicles.id'),
             'days_no_worked' => DB::table('supervisions')->select(DB::raw($this->dif_days."-count(*)"))->whereColumn('vehicle_id', 'vehicles.id'),
             "percent_worked" => DB::table('supervisions')->select(DB::raw("round(count(*)*100/".$this->dif_days."::numeric,2)"))->whereColumn('vehicle_id', 'vehicles.id'),
             "percent_no_worked" => DB::table('supervisions')->select(DB::raw("round((".$this->dif_days."-count(*))*100/".$this->dif_days."::numeric,2)"))->whereColumn('vehicle_id', 'vehicles.id'),
         ])
-            ->Filtro($request)
-            ->get();
+        ->get();
     }
 
     private function generarPdf()

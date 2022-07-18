@@ -2,6 +2,7 @@
 
 use App\Core\ImageService;
 use App\Http\Controllers\GeneralController;
+use App\Http\Controllers\Supervision\SupervisionReportController;
 use App\Http\Controllers\Vehicle\VehicleReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::apiResource('vehicles', \App\Http\Controllers\Vehicle\VehicleController::
 //Reportes
 Route::prefix('report')->group(function () {
     Route::get('vehicles', [VehicleReportController::class,'report']);
+    Route::get('supervisions', [SupervisionReportController::class,'report']);
 });
 Route::get('p',function(){
     return view('Reports.Header');

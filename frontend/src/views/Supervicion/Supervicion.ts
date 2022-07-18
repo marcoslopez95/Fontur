@@ -17,12 +17,20 @@ let headers = [
     },
     {
         value: 'type_fuel',
-        text: "Tipo de Combustible"
+        text: "Combustible"
     },
     {
-        value: 'activo',
-        text: 'Activo'
+        value: 'municipality',
+        text: "Municipio"
     },
+    {
+        value: 'line',
+        text: "Línea"
+    },
+    {
+        value: 'supervisor',
+        text: 'Supervisor'
+    }
 ]
 
 export{

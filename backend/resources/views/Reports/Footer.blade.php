@@ -19,13 +19,15 @@
             <b>Promedio de días trabajados: </b> <br>{{ number_format($acum_days_worked / count($vehicles), 2) }}
         </td>
         <td align='center'>
-            <b>Promedio de días NO trabajados: </b><br> {{ number_format($acum_not_days_worked / count($vehicles), 2) }}
+            <b>Promedio de días NO trabajados: </b><br>
+            {{ number_format($acum_not_days_worked / count($vehicles), 2) }}
         </td>
         <td align='center'>
             <b>Promedio % de días trabajados: </b> <br>{{ number_format($acum_percent_worked / count($vehicles), 2) }}
         </td>
         <td align='center'>
-            <b>Promedio % de días NO trabajados: </b><br> {{ number_format($acum_not_percent_worked / count($vehicles), 2) }}
+            <b>Promedio % de días NO trabajados: </b><br>
+            {{ number_format($acum_not_percent_worked / count($vehicles), 2) }}
         </td>
 
     </tr>

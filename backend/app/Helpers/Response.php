@@ -19,11 +19,13 @@ if (! function_exists('custom_response')){
             'data'    => $data,
         ];
 
-        if ($message != 'index') {
-            $response['total'] = 1;
-        }else
-        if ($message == 'index') {
+
+        try{
+
             $response['total'] = count($data);
+        }catch(\Exception $e){
+
+            $response['total'] = 0;
         }
 
         return new Illuminate\Http\Response($response,$code);

@@ -55,13 +55,20 @@ class Supervision extends CrudModel
     public function scopeFiltro($query, $request)
     {
         return $query->when($request->fecha_fin && $request->fecha_ini, function ($q2) use ($request) {
-            $rango = [$request->fecha_ini, $request->fecha_fin];
+            $start = Carbon::parse($request->fecha_ini)->startOfDay();
+            $end = Carbon::parse($request->fecha_fin)->endOfDay();
+            $rango = [$start,$end];
             //dd($rango);
             $q2->whereBetween('fecha', $rango);
         })
         ->when($request->placa,function($q,$placa){
             $q->whereHas('vehicle', function (Builder $query) use ($placa){
                 $query->where('placa','ilike',"%$placa%");
+            });
+        })
+        ->when($request->line,function($q,$line){
+            $q->whereHas('vehicle', function(Builder $query) use ($line){
+                $query->where('line_id',$line);
             });
         })
         ->when($request->type_fuel,function($q,$type_fuel){
@@ -73,6 +80,9 @@ class Supervision extends CrudModel
             $q->whereHas('vehicle', function (Builder $query) use ($num_controller){
                 $query->where('placa','ilike',"%$num_controller%");
             });
+        })
+        ->when($request->supervisor_id,function(Builder $q,$id){
+            return $q->where('supervisor_id',$id);
         })
         ->when($request->municipality_id,function($q,$municipality_id){
             $q->whereHas('vehicle', function (Builder $query) use ($municipality_id){
