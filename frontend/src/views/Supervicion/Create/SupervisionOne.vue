@@ -27,30 +27,31 @@
                 />
             </div>
             <div class="flex mx-[50px] my-auto">
-                    <div class="mr-[15px]">
-                        <label class="" for="control">Línea</label>
-                    </div>
-                    <div>
-                        <select
-                            v-model="line_id"
-                            class="
-                                w-[150px]
-                                text-left
-                                bg-slate-200
-                                rounded
-                                hover:ring-blue-300
-                            "
-                        >
-                            <option
-                                v-for="(line, l) in lines"
-                                :key="l"
-                                :value="line.id"
-                            >
-                                {{ line.nombre }}
-                            </option>
-                        </select>
-                    </div>
+                <div class="mr-[15px]">
+                    <label class="" for="control">Línea</label>
                 </div>
+                <div>
+                    <select
+                        v-model="line_id"
+                        class="
+                            w-[150px]
+                            text-left
+                            bg-slate-200
+                            rounded
+                            hover:ring-blue-300
+                        "
+                        @change="getVehicles"
+                    >
+                        <option
+                            v-for="(line, l) in lines"
+                            :key="l"
+                            :value="line.id"
+                        >
+                            {{ line.nombre }}
+                        </option>
+                    </select>
+                </div>
+            </div>
         </div>
 
         <div class="">
@@ -133,14 +134,13 @@
 
 <script lang="ts" setup>
 import SearchIcon from "../../../components/Icons/SearchIcon.vue";
-import { ref, onMounted, onUpdated } from "vue";
+import { ref, onMounted, onUpdated, watch } from "vue";
 import axios from "axios";
 import ButtonCustom from "../../../components/ButtonCustom.vue";
 
 const props = defineProps<{
-    municipality_id: string | null
-}>()
-
+    municipality_id: string | null;
+}>();
 
 const headers_vehicle = ref([
     {
@@ -163,25 +163,35 @@ const headers_vehicle = ref([
 
 let vehiculos = ref([]);
 let original = ref([]);
-let line_id = ref('')
+let line_id = ref("");
 
-const lines = ref([{
-    id: '',
-    nombre: 'Todas'
-}])
+const lines = ref([
+    {
+        id: "",
+        nombre: "Todas",
+    },
+]);
 let form = ref({
     selecteds: [],
 });
 let charging = ref(true);
 let buscar = ref("");
-const emit = defineEmits(["loading",'guardar']);
+const emit = defineEmits(["loading", "guardar"]);
 
-function guardar(){
-    emit('guardar',form.value.selecteds)
+function guardar() {
+    
+    emit("guardar", form.value.selecteds);
 }
 
 onMounted(() => {
-    axios.get("/vehicles").then((response) => {
+    getVehicles()
+    });
+
+function getVehicles(){
+    const params = {
+        line_id: line_id.value
+    }
+    axios.get("/vehicles",{params}).then((response) => {
         let data: array = response.data.data;
         console.log("data", data);
 
@@ -193,16 +203,28 @@ onMounted(() => {
         charging.value = false;
         vehiculos.value = original.value = data;
     });
-});
 
+}
+watch(
+    () => props.municipality_id,
+    (value) => {
+        getLines();
+    }
+);
 
-function getLines(){
-   let params = {
-        line_id: line_id.value,
+function getLines() {
+    lines.value = [
+        {
+            id: "",
+            nombre: "Todas",
+        },
+    ];
+    let params = {
+        municipality: props.municipality_id,
     };
 
     axios
-        .get(`line`, { params })
+        .get(`lines`, { params })
         .then((res) => {
             let data = res.data.data;
             console.log("mun", data);
@@ -218,9 +240,9 @@ function getLines(){
 }
 
 function filtrar() {
-     vehiculos.value = original.value 
-    let filter = vehiculos.value.filter(
-        (vehiculo) => vehiculo.placa.toLowerCase().includes(buscar.value.toLowerCase())
+    vehiculos.value = original.value;
+    let filter = vehiculos.value.filter((vehiculo) =>
+        vehiculo.placa.toLowerCase().includes(buscar.value.toLowerCase())
     );
 
     vehiculos.value = buscar.value === "" ? original.value : filter;

@@ -28,13 +28,13 @@ class SupervisionService extends CrudService
 
         foreach($request->vehicles as $vehicle){
             $data = [
-                'vehicle_id' => $vehicle['id'],
-                'activo' => $vehicle['active'],
+                'vehicle_id' => $vehicle,
                 'fecha' => $request['date'],
+                'municipality_id' => $request['municipality_id'],
+                'supervisor_id' => $request['supervisor_id'],
             ];
             $this->repository->storeByArray($data);
         }
-
         //dd($data);
         return $request->all();
     }

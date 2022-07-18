@@ -19,14 +19,14 @@
 @section('body')
     <table align='center'>
         <thead>
-            <tr>
-                <td colspan="{{ count($headers) }}" align='center'>
-                    @include('Reports.Header')
-                </td>
-            </tr>
-            <tr>
+            <tr >
                 @foreach ($headers as $head)
-                    <th style="font-size: 12px">
+                    <th style="
+                        font-size: 12px;
+                        height: 120px;
+                        vertical-align:bottom
+                        "
+                    >
                         {{ $head }}
                     </th>
                 @endforeach
@@ -68,28 +68,29 @@
                 <td align="center">
                     {{ $supervision->vehicle->type_fuel }}
                 </td>
-                <td align="center">
+                <td align="center" width='60px'>
                     {{ $supervision->days_worked }}
                 </td>
-                <td align="center">
+                <td align="center" width='60px'>
                     {{ $supervision->percent_worked }}
                 </td>
-                <td align="center">
+                <td align="center" width='60px'>
                     {{ $supervision->days_no_worked }}
                 </td>
-                <td align="center">
+                <td align="center" width='60px'>
                     {{ $supervision->percent_no_worked }}
                 </td>
             </tr>
         @endforeach
-        <tr> <td style="height: 50px"></td></tr>
-        {{-- @if (count($supervisions) > 0)
-        <tr>
-            <td colspan="{{count($headers)}}">
-                @include('Reports.Footer')
-            </td>
-        </tr>
-        @endif --}}
+        @if (count($supervisions) > 0)
+
+            <tr> <td style="height: 50px"></td></tr>
+            <tr>
+                <td colspan="{{count($headers)}}">
+                    @include('Reports.Footer')
+                </td>
+            </tr>
+        @endif
 
 
         </tbody>

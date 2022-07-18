@@ -117,6 +117,7 @@ let municipalities = ref([
     },
 ]);
 
+
 function getMunicipalities() {
     let params = {
         state: "táchira",
@@ -145,7 +146,7 @@ function getSupervisors() {
         },
     ];
     let params = {
-        municipality_id: municipality_id.value,
+        buscar_regional: municipality_id.value,
     };
     axios
         .get(`supervisors`, { params })
@@ -165,6 +166,7 @@ function getSupervisors() {
         .catch((err) => {});
 }
 
+
 let type = ref("Supervisión Individual");
 let enabled = ref(false);
 let loading = ref(false);
@@ -178,14 +180,18 @@ function cambio(value: boolean) {
         value === true ? "Supervisión Grupal" : "Supervisión Individual";
 }
 
-function guardar(selecteds: array) {
+function guardar(vehicles: array) {
+    console.log('form',vehicles);
+    
     let form = {
-        vehiculos: selecteds,
-        fecha: date.value,
+        vehicles: vehicles,
+        date: date.value,
+        municipality_id: municipality_id.value,
+        supervisor_id: supervisor_id.value
     };
 
     axios
-        .post("vehicles", form)
+        .post("supervisions", form)
         .then((res) => {
             let data = res.data;
             console.log("res", data);

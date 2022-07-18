@@ -64,6 +64,9 @@ class Vehicle extends CrudModel
         ->when($request->num_controller, function ($query2,$num_controller){
             return $query2->where('num_controller','ilike',"%$num_controller%");
         })
+        ->when($request->line_id,function(Builder $q, $line_id){
+            return $q->where('line_id',$line_id);
+        })
         ->when($request->fecha_ini&&$request->fecha_fin,function($q) use ($request){
             $q->whereHas('supervisions', function (Builder $query) use($request){
                 $rango = [$request->fecha_ini, $request->fecha_fin];

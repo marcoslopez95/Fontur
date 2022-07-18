@@ -30,13 +30,13 @@
     <table align='center' style="border-collapse: collapse;">
         <thead>
             <tr>
-                <td colspan="{{ count($headers) }}" align='center'>
-                    @include('Reports.Header')
-                </td>
-            </tr>
-            <tr>
                 @foreach ($headers as $head)
-                    <th style="font-size: 12px">
+                <th style="
+                font-size: 12px;
+                height: 120px;
+                vertical-align:bottom
+                "
+            >
                         {{ $head }}
                     </th>
                 @endforeach
@@ -46,28 +46,17 @@
         <tbody>
             @php
                 $i = 1;
-                // $count_type_fuel = [];
-                // $acum_days_worked = 0;
-                // $acum_not_days_worked = 0;
-                // $acum_percent_worked = 0;
-                // $acum_not_percent_worked = 0;
+                $count_type_fuel = [];
+                $acum_days_worked = 0;
+                $acum_not_days_worked = 0;
+                $acum_percent_worked = 0;
+                $acum_not_percent_worked = 0;
             @endphp
             @foreach ($supervisions as $municipio => $linea)
-                {{-- @php
-            if(!(array_key_exists($supervision->vehicle->type_fuel,$count_type_fuel))){
-                $count_type_fuel[$supervision->vehicle->type_fuel] = 0;
-            }
-            $count_type_fuel[$supervision->vehicle->type_fuel] +=1;
-            $acum_days_worked += $supervision->days_worked;
-            $acum_not_days_worked += $supervision->days_no_worked;
-            $acum_percent_worked += $supervision->percent_worked;
-            $acum_not_percent_worked += $supervision->percent_no_worked;
-        @endphp --}}
+
                 <tr style="
                 background-color: rgb(65, 24, 177);
-
-
-            ">
+                ">
                     <td style=" color:white;">
                         Municipio:
                     </td>
@@ -104,6 +93,16 @@
 
                     </tr>
                     @foreach ($supervisiones as $supervision)
+                    @php
+                if(!(array_key_exists($supervision->vehicle->type_fuel,$count_type_fuel))){
+                    $count_type_fuel[$supervision->vehicle->type_fuel] = 0;
+                }
+                $count_type_fuel[$supervision->vehicle->type_fuel] +=1;
+                $acum_days_worked += $supervision->days_worked;
+                $acum_not_days_worked += $supervision->days_no_worked;
+                $acum_percent_worked += $supervision->percent_worked;
+                $acum_not_percent_worked += $supervision->percent_no_worked;
+            @endphp
                         <tr>
                             <td align="center">
                                 {{ $i++ }}
@@ -139,16 +138,16 @@
                     <td style="height: 20px"></td>
                 </tr>
             @endforeach
+            @if (count($supervisions) > 0)
             <tr>
                 <td style="height: 50px"></td>
             </tr>
-            {{-- @if (count($supervisions) > 0)
         <tr>
             <td colspan="{{count($headers)}}">
                 @include('Reports.Footer')
             </td>
         </tr>
-        @endif --}}
+        @endif
 
 
         </tbody>

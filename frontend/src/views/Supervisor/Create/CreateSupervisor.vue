@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <h2 class="text-xl text-center">Crear Vehículo</h2>
+            <h2 class="text-xl text-center">Crear Supervisor</h2>
             <h3 class="text-sm text-center"></h3>
         </div>
 
@@ -9,12 +9,50 @@
             <div class="p-[25px] flex gap-[25px] text-center">
                 <div>
                     <div>
-                        <label class="" for="plate">Placa</label>
+                        <label class="" for="nombre">Nombre</label>
                     </div>
                     <div>
                         <input
-                            v-model="formulario.placa"
-                            id="plate"
+                            v-model="formulario.first_name"
+                            id="nombre"
+                            type="text"
+                            class="
+                                w-[150px]
+                                px-[15px]
+                                bg-slate-200
+                                rounded
+                                hover:ring-blue-300
+                            "
+                        />
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <label class="" for="apellido">Apellido</label>
+                    </div>
+                    <div>
+                        <input
+                            v-model="formulario.last_name"
+                            id="apellido"
+                            type="text"
+                            class="
+                                w-[150px]
+                                px-[15px]
+                                bg-slate-200
+                                rounded
+                                hover:ring-blue-300
+                            "
+                        />
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <label class="" for="ci">CI</label>
+                    </div>
+                    <div>
+                        <input
+                            v-model="formulario.ci"
+                            id="ci"
                             type="text"
                             class="
                                 w-[150px]
@@ -29,12 +67,12 @@
 
                 <div class="w-[160px]">
                     <div>
-                        <label class="" for="fuel">Tipo de Combustible</label>
+                        <label class="" for="fuel">Regional</label>
                     </div>
                     <div>
                         <select
                             id="fuel"
-                            v-model="formulario.type_fuel"
+                            v-model="formulario.regional"
                             type="text"
                             class="
                                 w-[150px]
@@ -45,7 +83,7 @@
                             "
                         >
                             <option
-                                v-for="(type, i) in types_fuel"
+                                v-for="(type, i) in regional"
                                 :key="i"
                                 :value="type.value"
                             >
@@ -55,39 +93,19 @@
                     </div>
                 </div>
 
-                <div class="w-[250px]">
-                    <div>
-                        <label class="" for="control">Número de Control</label>
-                    </div>
-                    <div>
-                        <input
-                            id="control"
-                            v-model="formulario.num_controller"
-                            type="text"
-                            class="
-                                w-[150px]
-                                px-[15px]
-                                bg-slate-200
-                                rounded
-                                hover:ring-blue-300
-                            "
-                        />
-                    </div>
-                </div>
-
                  <div class="w-[250px]">
                     <div>
-                        <label class="" for="control">Línea</label>
+                        <label class="" for="control">Municipios</label>
                     </div>
                     <div>
-                        <select v-model="formulario.line_id"   class="
+                        <select v-model="formulario.municipality_id"   class="
                                 w-[150px]
                                 text-center
                                 bg-slate-200
                                 rounded
                                 hover:ring-blue-300
                             ">
-                            <option v-for="(line,j) in lines" :key="j" :value="line.id">
+                            <option v-for="(line,j) in municipalities" :key="j" :value="line.id">
                                 {{line.name}} 
                             </option>
                         </select>
@@ -124,74 +142,77 @@ const router = useRouter();
 const route = useRoute();
 let id = ref(0)
 onBeforeMount(() =>{
-getLines()
+getMunicipalities()
 })
 onMounted(() => {
     
     if(route.params.id){
         id.value = route.params.id;
-        getVehicle(id.value)
+        getSupervisor(id.value)
     }
 });
 
-let lines = ref([
+let municipalities = ref([
     {
         id: '',
         name: 'Seleccione...'
     }
 ])
 
-let types_fuel = ref([
+let regional = [
     {
-        text: "Diesel",
-        value: "Diesel",
+        text: "No",
+        value: false,
     },
     {
-        text: "Gasolina",
-        value: "Gasolina",
-    },
-    {
-        text: "Eléctrico",
-        value: "Eléctrico",
-    },
-]);
+        text: "Si",
+        value: true,
+    }
+];
 
 let formulario = ref({
-    num_controller: "",
-    placa: "",
-    type_fuel: "Gasolina",
-    line_id: ''
+    first_name: "",
+    last_name: "",
+    ci: "",
+    regional: false,
+    municipality_id: ''
 });
 
 let items = ["num_controller", "placa", "type_fuel",'line_id'];
 
 function validarForm(): boolean {
-    let control = formulario.value.num_controller
-    let placa = formulario.value.placa
-    let type = formulario.value.type_fuel
-    let line = formulario.value.line_id
+    let control = formulario.value.first_name
+    let placa = formulario.value.last_name
+    let type = formulario.value.ci
+    let line = formulario.value.regional
+    let muni = formulario.value.municipality_id
 
-    return control !== "" && placa !== "" && type !== "" && line !== '';
+    return control !== "" && placa !== "" && type !== "" && muni!== '';
 }
 
-function getVehicle(id) {
+function getSupervisor(id) {
     axios
-        .get(`vehicles/${id}`)
+        .get(`supervisors/${id}`)
         .then((res) => {
             let data = res.data.data;
             formulario.value = data;
+            if(formulario.value.regional == 'No'){
+                formulario.value.regional = false
+            }else{
+                formulario.value.regional = true
+            }
         })
         .catch((err) => {});
 }
 
-function getLines() {
+function getMunicipalities() {
     axios
-        .get(`lines`)
+        .get(`municipalities?state=táchira`)
         .then((res) => {
-            let data = res.data.data;
+            let data = res.data;
             data.forEach(element => {
-                lines.value.push({
-                    name: element.name,
+                municipalities.value.push({
+                    name: element.nombre,
                     id: element.id
                 })
             })
@@ -203,12 +224,12 @@ function getLines() {
 
 function guardar() {
     if(id.value !== 0){
-    axios.put(`vehicles/${id.value}`, formulario.value).then((resp) => {
-        router.push({ name: "Vehiculo" });
+    axios.put(`supervisors/${id.value}`, formulario.value).then((resp) => {
+        router.push({ name: "Supervisor" });
     });    
     }else{
-axios.post("vehicles", formulario.value).then((resp) => {
-        router.push({ name: "Vehiculo" });
+axios.post("supervisors", formulario.value).then((resp) => {
+        router.push({ name: "Supervisor" });
     });
     }
     

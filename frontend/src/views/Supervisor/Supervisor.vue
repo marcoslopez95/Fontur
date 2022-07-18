@@ -7,11 +7,11 @@
             <ListCustom
                 :headers="headers"
                 :items="items"
-                nombreBoton="Vehiculo"
+                nombreBoton="Supervisor"
                 widthTable="w-[90%]"
-                routeEdit="vehiculo-edit"
-                urlDelete="vehicles"
-                @click-create="CreateSupervision()"
+                routeEdit="supervisor-edit"
+                urlDelete="supervisors"
+                @click-create="CreateSupervisor()"
             >
                 <template #filtro>
                     <div class="flex h-[25px] ml-[80px]" @keypress.enter="filtrar">
@@ -59,8 +59,8 @@ let buscar = ref("");
 let original = ref([]);
 let loading = ref(false);
 
-function CreateSupervision() {
-    router.push({ name: "vehiculo-create" });
+function CreateSupervisor() {
+    router.push({ name: "supervisor-create" });
 }
 
 function filtrar() {

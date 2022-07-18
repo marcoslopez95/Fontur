@@ -17,7 +17,8 @@ class Supervision extends CrudModel
     protected $fillable = [
         'vehicle_id',
         'fecha',
-        'supervisor_id'
+        'supervisor_id',
+        'municipality_id'
     ];
 
     /**

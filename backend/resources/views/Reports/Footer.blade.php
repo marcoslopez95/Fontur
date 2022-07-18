@@ -1,7 +1,10 @@
 <table>
+    @php
+    $i--;
+@endphp
     <tr>
         <td colspan="2">
-            <b>Total de vehículos: </b>{{ count($vehicles) }}
+            <b>Total de vehículos: </b>{{ $i }}
         </td>
         <td colspan="2">
             <b>Total por Tipo de Combustible:</b>
@@ -16,18 +19,18 @@
     </tr>
     <tr>
         <td align='center'>
-            <b>Promedio de días trabajados: </b> <br>{{ number_format($acum_days_worked / count($vehicles), 2) }}
+            <b>Promedio de días trabajados: </b> <br>{{ number_format($acum_days_worked / $i, 2) }}
         </td>
         <td align='center'>
             <b>Promedio de días NO trabajados: </b><br>
-            {{ number_format($acum_not_days_worked / count($vehicles), 2) }}
+            {{ number_format($acum_not_days_worked / $i, 2) }}
         </td>
         <td align='center'>
-            <b>Promedio % de días trabajados: </b> <br>{{ number_format($acum_percent_worked / count($vehicles), 2) }}
+            <b>Promedio % de días trabajados: </b> <br>{{ number_format($acum_percent_worked / $i, 2) }}
         </td>
         <td align='center'>
             <b>Promedio % de días NO trabajados: </b><br>
-            {{ number_format($acum_not_percent_worked / count($vehicles), 2) }}
+            {{ number_format($acum_not_percent_worked / $i, 2) }}
         </td>
 
     </tr>

@@ -14,7 +14,7 @@
         >
             <template #filtro>
                 <div>
-                    <a target="_blank" :href="dowload">
+                    <a target="_blank">
                         <ButtonCustom
                             title="Descargar"
                             class="
@@ -23,10 +23,15 @@
                                 bg-green-700
                                 hover:bg-green-400
                             "
+                            @click="showModalDescarga = true"
                         >
                             <DownloadIcon />
                         </ButtonCustom>
                     </a>
+                    <CardModal :showing="showModalDescarga" @close="showModalDescarga = false">
+                       <BotoneraDescarga :url_base="dowload"/>
+                    </CardModal>
+                    <!-- ------------------------------- -->
                     <a target="_blank">
                         <ButtonCustom
                             title="Descargar"
@@ -62,14 +67,22 @@ import DownloadIcon from "../../components/Icons/DownloadIcon.vue";
 import FilterIcon from "../../components/Icons/FilterIcon.vue";
 import CardModal from "../../components/CardModal.vue";
 import FiltroSupervicion from "./FiltroSupervicion.vue";
+import BotoneraDescarga from "./BotoneraDescarga.vue";
 
 //const eventStore = inject<boolean>(StoreSupervision,false)
 const router = useRouter();
 let items = ref([]);
 const showModal = ref(false);
+const showModalDescarga = ref(false);
 let loading = ref(false);
 let dowload = ref(import.meta.env.VITE_API + "/report/vehicles");
-const filtro = ref({})
+const filtro = ref({
+    fecha_ini: "",
+    fecha_fin: "",
+    municipality_id: "",
+    line: "",
+    supervisor_id: ''
+})
 
 function CreateSupervision() {
     router.push({ name: "supervision-create" });
@@ -102,13 +115,15 @@ let filtrar = (value) => {
     crearRuta()
 }
 let crearRuta = () => {
-    dowload.value = import.meta.env.VITE_API + "/report/vehicles?";
+    dowload.value = import.meta.env.VITE_API + "/report/supervisions?";
+
     for(let item in filtro.value){
         dowload.value += `${item}=${filtro.value[item]}&`
     }
 }
 onMounted(() => {
     getIndex();
+    crearRuta()
 });
 </script>
 

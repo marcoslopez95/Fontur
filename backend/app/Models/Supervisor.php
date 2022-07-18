@@ -38,6 +38,12 @@ class Supervisor extends CrudModel
                 ->when($request->municipality_id,function(Builder $query, $municipality_id){
                     return $query->where('municipality_id',$municipality_id);
                 })
+                ->when($request->buscar_regional,function(Builder $q,$supervision){
+                    return $q->where(function(Builder $q2) use ($supervision){
+                        $q2->where('municipality_id',$supervision)
+                            ->orWhere('regional',true);
+                    });
+                })
                 ->when($request->supervision,function(Builder $q,$supervision){
                     return $q->where(function(Builder $q2) use ($supervision){
                         $q2->where('first_name','ilike',"%$supervision%")

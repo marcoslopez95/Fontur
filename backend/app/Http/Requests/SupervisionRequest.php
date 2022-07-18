@@ -25,10 +25,11 @@ class SupervisionRequest extends FormRequest
     {
         if ($this->isMethod('post'))
             return [
-                'vehicles' => 'required|array',
-                'vehicles.*.id' => 'required|integer|exists:vehicles,id|distinct',
-                'vehicles.*.active' => 'required|boolean',
-                'date' => 'required|date'
+                'vehicles'          => 'required|array',
+                'vehicles.*'        => 'required|integer|exists:vehicles,id|distinct',
+                'date'              => 'required|date',
+                'municipality_id'   => 'required|exists:municipalities,id',
+                'supervisor_id'     => 'required|exists:supervisors,id'
             ];
         if ($this->isMethod('put'))
             return [

@@ -24,7 +24,7 @@ class Line extends CrudModel
                     return $query->where('rif','ilike',"%$rif%");
                 })
                 ->when($request->municipality,function(Builder $query,$municipality){
-                    return $query->where('municipality',$municipality);
+                    return $query->where('municipality_id',$municipality);
                 })
                 ;
     }

@@ -1,6 +1,5 @@
 FROM alpine:3.13
-LABEL Maintainer="Zippyttech" \
-      Description="Lightweight container with Nginx 1.14 & PHP-FPM 7.2 based on Alpine Linux. "
+LABEL Description="Lightweight container with Nginx 1.14 & PHP-FPM 7.2 based on Alpine Linux. "
 RUN    apk add --update curl ca-certificates
 
 # Install packages
@@ -27,9 +26,9 @@ ENV APP_LOG errorlog
 RUN mkdir -p /var/www/html
 WORKDIR /var/www/html
 #COPY . /var/www/html
-RUN cd /var/www/html && composer install
-RUN php artisan storage:link
-RUN chmod -R 777 storage && chmod -R 777 storage/app/public
+#RUN cd /var/www/html && composer install
+#RUN php artisan storage:link
+#RUN chmod -R 777 storage && chmod -R 777 storage/app/public
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
