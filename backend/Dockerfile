@@ -25,10 +25,11 @@ ENV APP_LOG errorlog
 # Add application
 RUN mkdir -p /var/www/html
 WORKDIR /var/www/html
-#COPY . /var/www/html
-#RUN cd /var/www/html && composer install
-#RUN php artisan storage:link
-#RUN chmod -R 777 storage && chmod -R 777 storage/app/public
+COPY . /var/www/html
+RUN cd /var/www/html && composer install
+RUN php artisan storage:link
+RUN php artisan key:generate
+RUN chmod -R 777 storage && chmod -R 777 storage/app/public
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
